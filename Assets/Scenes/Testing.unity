@@ -2361,8 +2361,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f40d75cda1bad5544b41911631bdba5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gun: {fileID: 1249203351}
   bulletPrefab: {fileID: 755374579887258762, guid: 41587861cea6c2048a5dfe2f32136c38, type: 3}
   bulletSpawn: {fileID: 659519440}
+  camera: {fileID: 963194227}
+  distance: 500
 --- !u!1 &1631323050
 GameObject:
   m_ObjectHideFlags: 0
