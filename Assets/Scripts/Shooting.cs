@@ -1,13 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.EditorTools;
 using UnityEngine;
 
 public class Shooting : MonoBehaviour
 {
-    [SerializeField] private Transform gun;
-    [SerializeField] private GameObject bulletPrefab;
+    [Tooltip("Gun or Obj")]
+    [SerializeField] private Transform rotateTarget;
     [SerializeField] private Transform bulletSpawn;
+    [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Camera camera;
     public float distance = 30f;
 
@@ -22,6 +24,14 @@ public class Shooting : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
+        }
+    }
+
+    private void FixedUpdate()
+    {
         Vector3 targetLocation = Vector3.forward;
         
         RaycastHit hit = new RaycastHit();
@@ -31,11 +41,6 @@ public class Shooting : MonoBehaviour
         if (hit.collider != null) targetLocation = hit.point;
         else targetLocation = camera.transform.forward * distance;
         
-        gun.transform.LookAt(targetLocation);
-        
-        if (Input.GetMouseButtonDown(0))
-        {
-            Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
-        }
+        rotateTarget.transform.LookAt(targetLocation, transform.up);
     }
 }

@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     
     public float jump = 20f;
     public int numOfJumps = 2;
+    Vector3 moveInput = Vector3.zero;
     
     /*
     [Header("head bob")]
@@ -30,9 +31,12 @@ public class PlayerMovement : MonoBehaviour
     
     public Transform camera;
     public float sensitivity;
+    
+    public static PlayerMovement instance;
 
     private void Awake()
     {
+        instance = this;
         cc = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -42,7 +46,7 @@ public class PlayerMovement : MonoBehaviour
     {
         CameraAndPlayerRotation();
         
-        Vector3 moveInput = Vector3.zero;
+        moveInput = Vector3.zero;
         moveInput += transform.right * Input.GetAxisRaw("Horizontal");
         moveInput += transform.forward *  Input.GetAxisRaw("Vertical");
         moveInput.Normalize();
@@ -113,5 +117,4 @@ public class PlayerMovement : MonoBehaviour
         if (camera.rotation.eulerAngles.x - mouseY < 90 || camera.rotation.eulerAngles.x - mouseY > 270)
             camera.Rotate(Vector3.right * -mouseY);
     }
-    
 }
