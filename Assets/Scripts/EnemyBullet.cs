@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public class EnemyBullet : MonoBehaviour
 {
     public float speed;
     public float deathTimer;
@@ -30,13 +30,9 @@ public class Bullet : MonoBehaviour
             transform.position += transform.forward * (speed * Time.deltaTime);
         else
         {
-            if (hit.collider.CompareTag("Enemy"))
+            if (hit.collider.CompareTag("Player"))
             {
-                hit.collider.transform.parent.gameObject.GetComponent<Enemy>().hit(dmg);
-            }
-            if (hit.collider.CompareTag("Enemy Crit"))
-            {
-                hit.collider.transform.parent.gameObject.GetComponent<Enemy>().hit(dmg * 2);
+                hit.collider.gameObject.GetComponent<PlayerHP>().TakeDmg(dmg);
             }
             SelfDestroy();
         }

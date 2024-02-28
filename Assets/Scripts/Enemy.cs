@@ -5,7 +5,11 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
+
 {
+    public Animator anim;
+    public GameObject bulletSpawn;
+    public GameObject bullet;
     public int hp = 30;
     //public Rigidbody rb;
     //public float speed;
@@ -14,7 +18,8 @@ public class Enemy : MonoBehaviour
     public float distanceChase = 15f;
     public float distanceStopChase = 20f; 
     public float distanceAttack = 2f;
-    
+    public float timeBetweenAttacks = 1f;
+    public float attackWaitTimer;
 
     private Vector3 playerPosition;
     private Vector3 startPosition;
@@ -31,6 +36,7 @@ public class Enemy : MonoBehaviour
     private void Update()
     {
         playerPosition = PlayerMovement.instance.transform.position;
+        attackWaitTimer -= Time.deltaTime;
         //playerPosition.y = transform.position.y;
         
         float distance = Vector3.Distance(transform.position, playerPosition);
@@ -53,6 +59,8 @@ public class Enemy : MonoBehaviour
                 //rb.velocity = Vector3.zero;
                 chase = false;
                 agent.SetDestination(transform.position);
+                Shoot();
+                
             }
             
             if (distance > distanceStopChase)
@@ -63,6 +71,8 @@ public class Enemy : MonoBehaviour
                 Invoke("ReturnToStart", timeToReturn);
             }
         }
+        
+        anim.SetBool("Walk", agent.velocity.magnitude > 0f);
     }
     
     private void ReturnToStart()
@@ -78,5 +88,13 @@ public class Enemy : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    private void Shoot()
+    {
+        if (attackWaitTimer > 0) return;
+        attackWaitTimer = timeBetweenAttacks;
+        bulletSpawn.transform.LookAt(PlayerHP.instance.transform);
+        Instantiate(bullet, bulletSpawn.transform.position, bulletSpawn.transform.rotation);
     }
 }
