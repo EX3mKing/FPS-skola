@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,8 +13,8 @@ public class PlayerHP : MonoBehaviour
     public float invincibilityDuration = 1f;
     private float invicibilityTimer;
 
-    public Image HpPadding;
-    public Image HpCur;
+    public Slider hpBar;
+    public TextMeshProUGUI hpText;
     
     private void Awake()
     {
@@ -24,6 +25,8 @@ public class PlayerHP : MonoBehaviour
     public void Update()
     {
         if (invicibilityTimer > 0) invicibilityTimer -= Time.deltaTime;
+        hpBar.value = (float)currentHP / (float)maxHP;
+        hpText.text = "HP: " + currentHP;
     }
 
     public void TakeDmg(int dmg)
@@ -31,6 +34,12 @@ public class PlayerHP : MonoBehaviour
         if (invicibilityTimer > 0) return;
         currentHP -= dmg;
         invicibilityTimer = invincibilityDuration;
-        if (currentHP <= 0) print("die");
+        if (currentHP <= 0) GameManager.Instance.PlayerDeath();
+    }
+    
+    public void Heal(int amount)
+    {
+        currentHP += amount;
+        if (currentHP > maxHP) currentHP = maxHP;
     }
 }
