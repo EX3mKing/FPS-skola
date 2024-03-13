@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 444122022408261904}
   - component: {fileID: 8556984125496260832}
   - component: {fileID: 6770150331291056216}
+  - component: {fileID: 2930395068602997523}
   - component: {fileID: 5504216073248314870}
-  - component: {fileID: 2392980744913294214}
   m_Layer: 7
-  m_Name: Bullet Enemy
+  m_Name: PBullet2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 559ef19b8faf3144bbe193bf06ab9fc1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -85,6 +85,26 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2930395068602997523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 755374579887258762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f5648692c50fd54994da757b3f70234, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 70
+  deathTimer: 3
+  hitEffect: {fileID: 7339330895994553136, guid: f8f497f58cae1434c91411bf2a499cba, type: 3}
+  hitEffectDistance: 0.1
+  mask:
+    serializedVersion: 2
+    m_Bits: 55
+  dmg: 10
 --- !u!96 &5504216073248314870
 TrailRenderer:
   serializedVersion: 3
@@ -198,23 +218,3 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
---- !u!114 &2392980744913294214
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 755374579887258762}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90b8cb1c8fd44e14cbd2767d3c7485c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 25
-  deathTimer: 5
-  hitEffect: {fileID: 7339330895994553136, guid: f8f497f58cae1434c91411bf2a499cba, type: 3}
-  hitEffectDistance: 0.1
-  mask:
-    serializedVersion: 2
-    m_Bits: 567
-  dmg: 10

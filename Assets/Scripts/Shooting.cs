@@ -22,13 +22,27 @@ public class Shooting : MonoBehaviour
 
     private Vector3 startLocation;
     private Vector3 startRotation;
+    
+    public List<Weapon> weapons;
+    public int currentWeaponIndex;
+
+    private float zoomStart;
+    private float zoomTarget;
+    public float zoomSpeed;
+    
+    private Vector3 aimStartPosition;
+    public Transform AimPosition;
+    public float aimSpeed;
 
     private void Start()
     {
+        zoomStart = Camera.main.fieldOfView;
         startLocation = transform.position;
         startRotation = transform.rotation.eulerAngles;
         rotateTarget = currentWeapon.bulletSpawn;
         bulletSpawn = currentWeapon.bulletSpawn;
+        SetCurrentWeapon(0);
+        aimStartPosition = currentWeapon.transform.localPosition;
     }
 
     private void Update()
@@ -51,7 +65,14 @@ public class Shooting : MonoBehaviour
                 currentWeapon.ammoCurrent--;
             }
         }
-            
+
+        if (Input.GetMouseButton(1)) ZoomIn(); 
+        else ZoomOut();
+        
+        if (Input.GetKeyDown(KeyCode.Alpha1)) SetCurrentWeapon(0);
+        if (Input.GetKeyDown(KeyCode.Alpha2)) SetCurrentWeapon(1);
+        if (Input.GetKeyDown(KeyCode.Alpha3)) SetCurrentWeapon(2);
+        if (Input.GetKeyDown(KeyCode.Tab)) RotateCurrentWeapon();
     }
 
     private void LateUpdate()
@@ -64,6 +85,7 @@ public class Shooting : MonoBehaviour
         if (hit.collider != null) targetLocation = hit.point;
         else targetLocation = camera.transform.forward * distance;
         rotateTarget.transform.LookAt(targetLocation, Vector3.up);
+        Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, zoomTarget, Time.deltaTime * zoomSpeed);
         
         if(!currentWeapon.laser) return;
         RaycastHit gunHit = new RaycastHit();
@@ -82,5 +104,48 @@ public class Shooting : MonoBehaviour
             laserPoint.SetActive(false);
         }
         
+    }
+    
+    public void SetCurrentWeapon(int index)
+    {
+        if (index > weapons.Count - 1) return;
+        currentWeapon.gameObject.SetActive(false);
+        currentWeapon = weapons[index];
+        currentWeaponIndex = index;
+        currentWeapon.gameObject.SetActive(true);
+        rotateTarget = currentWeapon.bulletSpawn;
+        bulletSpawn = currentWeapon.bulletSpawn;
+        zoomTarget = zoomStart;
+        if (currentWeapon.laser)
+        {
+            lineRenderer.enabled = true;
+            laserPoint.SetActive(true);
+        }
+        else
+        {
+            lineRenderer.enabled = false;
+            laserPoint.SetActive(false);
+        }
+    }
+
+    private void RotateCurrentWeapon()
+    {
+        currentWeaponIndex++;
+        currentWeaponIndex %= weapons.Count;
+        SetCurrentWeapon(currentWeaponIndex);
+    }
+    
+    private void ZoomIn()
+    {
+        zoomTarget = currentWeapon.zoom;
+        currentWeapon.transform.position = Vector3.MoveTowards(currentWeapon.transform.position, 
+            AimPosition.position, aimSpeed * Time.deltaTime);
+    }
+    
+    private void ZoomOut()
+    {
+        zoomTarget = zoomStart;
+        currentWeapon.transform.localPosition = Vector3.MoveTowards(currentWeapon.transform.localPosition, 
+            aimStartPosition, aimSpeed * Time.deltaTime);
     }
 }
