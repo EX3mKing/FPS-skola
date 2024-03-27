@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEditor.EditorTools;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 
 public class Shooting : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class Shooting : MonoBehaviour
     private Vector3 startRotation;
     
     public List<Weapon> weapons;
+    public List<Weapon> weaponsNotFound;
     public int currentWeaponIndex;
 
     private float zoomStart;
@@ -33,6 +35,9 @@ public class Shooting : MonoBehaviour
     private Vector3 aimStartPosition;
     public Transform AimPosition;
     public float aimSpeed;
+    
+    public PostProcessVolume postProcessVolume;
+    private DepthOfField dof;
 
     private void Start()
     {
@@ -43,6 +48,7 @@ public class Shooting : MonoBehaviour
         bulletSpawn = currentWeapon.bulletSpawn;
         SetCurrentWeapon(0);
         aimStartPosition = currentWeapon.transform.localPosition;
+        postProcessVolume.profile.TryGetSettings<DepthOfField>(out dof);
     }
 
     private void Update()
@@ -87,6 +93,8 @@ public class Shooting : MonoBehaviour
         rotateTarget.transform.LookAt(targetLocation, Vector3.up);
         Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, zoomTarget, Time.deltaTime * zoomSpeed);
         
+        dof.focusDistance.value = Vector3.Distance(hit.point, transform.position);
+
         if(!currentWeapon.laser) return;
         RaycastHit gunHit = new RaycastHit();
         Physics.Raycast(rotateTarget.position, (targetLocation - rotateTarget.position), out gunHit, mask);
@@ -147,5 +155,14 @@ public class Shooting : MonoBehaviour
         zoomTarget = zoomStart;
         currentWeapon.transform.localPosition = Vector3.MoveTowards(currentWeapon.transform.localPosition, 
             aimStartPosition, aimSpeed * Time.deltaTime);
+    }
+    
+    public void PickUpWeapon(Weapon weapon)
+    {
+        if (!weaponsNotFound.Contains(weapon)) return;
+        weapons.Add(weapon);
+        weaponsNotFound.Remove(weapon);
+        weapon.gameObject.SetActive(false);
+        SetCurrentWeapon(weapons.Count - 1);
     }
 }

@@ -7,6 +7,7 @@ public class Weapon : MonoBehaviour
 {
     public GameObject bullet;
     public Transform bulletSpawn;
+    public string weaponName;
     public bool automatic;
     public bool laser;
     public float fireRate;

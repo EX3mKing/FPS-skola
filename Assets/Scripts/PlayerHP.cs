@@ -15,6 +15,10 @@ public class PlayerHP : MonoBehaviour
 
     public Slider hpBar;
     public TextMeshProUGUI hpText;
+
+    public Image effectImage;
+    public float effectAlpha;
+    public float effectSpeed;
     
     private void Awake()
     {
@@ -27,6 +31,9 @@ public class PlayerHP : MonoBehaviour
         if (invicibilityTimer > 0) invicibilityTimer -= Time.deltaTime;
         hpBar.value = (float)currentHP / (float)maxHP;
         hpText.text = "HP: " + currentHP;
+        
+        effectImage.color = new Color(effectImage.color.r, effectImage.color.g, effectImage.color.b, 
+            Mathf.MoveTowards(effectImage.color.a, 0f, effectSpeed * Time.deltaTime));
     }
 
     public void TakeDmg(int dmg)
@@ -35,6 +42,8 @@ public class PlayerHP : MonoBehaviour
         currentHP -= dmg;
         invicibilityTimer = invincibilityDuration;
         if (currentHP <= 0) GameManager.Instance.PlayerDeath();
+        
+        effectImage.color = new Color(effectImage.color.r, effectImage.color.g, effectImage.color.b, effectAlpha);
     }
     
     public void Heal(int amount)
